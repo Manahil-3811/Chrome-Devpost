@@ -8,7 +8,7 @@ document.getElementById("summarize").addEventListener("click", async () => {
   chrome.storage.sync.get(["geminiApiKey"], async (result) => {
     if (!result.geminiApiKey) {
       resultDiv.innerHTML =
-        "API key not found. Please set your API key in the extension options.";
+        "API key not found. Please set your API key in the extension options. or Click Settings to go and add API Key";
       return;
     }
 
