@@ -117,3 +117,105 @@ async function getGeminiSummary(text, summaryType, apiKey) {
     throw new Error("Failed to generate summary. Please try again later.");
   }
 }
+
+document.getElementById("ai-group").addEventListener("click", async () => {
+  console.log("clicker");
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = '<div class="loading"><div class="loader"></div></div>';
+
+  chrome.storage.sync.get(["geminiApiKey"], async (result) => {
+    if (!result.geminiApiKey) {
+      resultDiv.innerHTML =
+        "API key not found. Please set your API key in the extension options.";
+      return;
+    }
+
+    try {
+      // get all tabs in the current window
+      const tabs = await chrome.tabs.query({ currentWindow: true });
+      const tabData = tabs.map((t) => ({
+        id: t.id,
+        title: t.title,
+        url: t.url,
+      }));
+
+      const prompt = `
+        You are an AI assistant that organizes Chrome tabs into topic-based groups.
+        Analyze the following tabs (title + URL) and group them logically.
+        Output STRICTLY in JSON format as shown below, nothing else:
+        [
+          { "group": "Group Name", "tabs": [{"title":"title1", "url":"url1"}, {"title":"title2", "url":"url2"}] }
+        ]
+
+        Here are the tabs:
+        ${tabData.map((t) => `- ${t.title} (${t.url})`).join("\n")}
+        `;
+
+      const groups = await getGeminiGroups(prompt, result.geminiApiKey);
+
+      // AI groups to real tabs and group them
+      for (const group of groups) {
+        const matchedTabs = tabs.filter((t) =>
+          group.tabs.some((title) => t.title.includes(title))
+        );
+        if (matchedTabs.length > 0) {
+          const tabIds = matchedTabs.map((t) => t.id);
+          const groupId = await chrome.tabs.group({ tabIds });
+          await chrome.tabGroups.update(groupId, {
+            title: group.group,
+            color: randomColor(),
+          });
+        }
+      }
+
+      resultDiv.innerHTML = `<b>Tabs grouped successfully using AI!</b>`;
+    } catch (error) {
+      console.error(error);
+      resultDiv.innerText = `Error: ${error.message}`;
+    }
+  });
+});
+
+async function getGeminiGroups(prompt, apiKey) {
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.3 },
+      }),
+    }
+  );
+
+  if (!res.ok) throw new Error("Failed to call Gemini API");
+  const data = await res.json();
+  const text =
+    data?.candidates?.[0]?.content?.parts?.[0]?.text
+      .replace(/^```json\s*|\s*```$/g, "")
+      .trim() || "[]";
+
+  try {
+    console.log(JSON.parse(text));
+    return JSON.parse(text);
+  } catch {
+    console.warn("AI did not return valid JSON:", text);
+    return [];
+  }
+}
+
+function randomColor() {
+  const colors = [
+    "grey",
+    "blue",
+    "red",
+    "yellow",
+    "green",
+    "pink",
+    "purple",
+    "cyan",
+    "orange",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+}

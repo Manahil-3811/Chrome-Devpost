@@ -69,10 +69,13 @@ button {
 }
 
 /* Summarize button */
+#ai-group,
 #summarize {
   background: linear-gradient(135deg, #5c6bc0, #3f51b5);
 }
 
+#ai-group:hover,
+#ai-group:focus,
 #summarize:hover,
 #summarize:focus {
   background: linear-gradient(135deg, #3f51b5, #2c387e);
