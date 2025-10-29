@@ -154,19 +154,17 @@ document.getElementById("ai-group").addEventListener("click", async () => {
       const groups = await getGeminiGroups(prompt, result.geminiApiKey);
 
       // AI groups to real tabs and group them
-      for (const group of groups) {
-        const matchedTabs = tabs.filter((t) =>
-          group.tabs.some((title) => t.title.includes(title))
-        );
-        if (matchedTabs.length > 0) {
-          const tabIds = matchedTabs.map((t) => t.id);
-          const groupId = await chrome.tabs.group({ tabIds });
-          await chrome.tabGroups.update(groupId, {
-            title: group.group,
-            color: randomColor(),
-          });
+      chrome.runtime.sendMessage(
+        { type: "GROUP_TABS_AI", data: groups },
+        (response) => {
+          console.log("Background responded:", response);
+          // alert(
+          //   response?.success
+          //     ? "Tabs grouped successfully!"
+          //     : response?.message
+          // );
         }
-      }
+      );
 
       resultDiv.innerHTML = `<b>Tabs grouped successfully using AI!</b>`;
     } catch (error) {
@@ -203,19 +201,4 @@ async function getGeminiGroups(prompt, apiKey) {
     console.warn("AI did not return valid JSON:", text);
     return [];
   }
-}
-
-function randomColor() {
-  const colors = [
-    "grey",
-    "blue",
-    "red",
-    "yellow",
-    "green",
-    "pink",
-    "purple",
-    "cyan",
-    "orange",
-  ];
-  return colors[Math.floor(Math.random() * colors.length)];
 }
