@@ -1,148 +1,169 @@
-/* General Styles */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   min-width: 520px;
-  min-height: 320px;
-  padding: 25px 30px;
-  background: linear-gradient(135deg, #f0f4ff, #d9e7ff);
+  min-height: 360px;
+  padding: 36px 0 24px 0;
+  background: linear-gradient(120deg, #b1c5ec 0%, #e4e9f7 75%, #f7f9fe 100%);
   color: #222;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  gap: 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(66, 133, 244, 0.15);
+  align-items: center;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-/* Header */
+/* Glass card with soft glow and 3D effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.54);
+  border-radius: 24px;
+  box-shadow:
+    0 2px 20px 4px rgba(75, 108, 215, 0.12),
+    0 1.5px 10px 0px rgba(29,41,120,0.04);
+  backdrop-filter: blur(15px) saturate(1.2);
+  padding: 28px 32px 34px 32px;
+  margin-bottom: 24px;
+  width: 95%;
+  max-width: 580px;
+  transition: transform 0.23s cubic-bezier(.86,-0.01,.45,.99),
+              box-shadow 0.24s cubic-bezier(.86,-0.01,.45,.99);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px) scale(1.011);
+  box-shadow:
+    0 4px 30px 8px rgba(75, 108, 215, 0.25),
+    0 2px 12px 2px rgba(29,41,120,0.09);
+}
+
 h2 {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 2rem;
-  color: #1a237e;
-  letter-spacing: 1px;
+  color: #283d7c;
+  letter-spacing: 1.2px;
   text-align: center;
-  margin: 0 0 15px 0;
+  margin: 0 0 22px 0;
+  text-shadow: 0 2px 14px #d0d6f9, 0 1.5px 2px #e4e9ff;
 }
 
-/* Options flex container */
 .options {
   display: flex;
-  gap: 15px;
+  gap: 17px;
   justify-content: center;
   align-items: center;
+  margin-bottom: 0.7em;
 }
 
-/* Select styling */
 #summary-type {
-  padding: 10px 18px;
-  font-size: 1rem;
-  border-radius: 30px;
-  border: 2px solid #7f8cff;
-  background-color: white;
+  padding: 12px 22px;
+  font-size: 1.08rem;
+  border-radius: 38px;
+  border: 1.6px solid #8f9ef7;
+  background: rgba(255,255,255,0.85);
   color: #34495e;
-  box-shadow: 0 4px 8px rgba(127, 140, 255, 0.2);
+  box-shadow: 0 2px 7px rgba(127,140,255,0.15);
   cursor: pointer;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.3s, box-shadow 0.3s;
   min-width: 160px;
-  outline-offset: 2px;
+  outline: none;
+  font-weight: 700;
 }
-
 #summary-type:focus,
 #summary-type:hover {
-  border-color: #4b6cd7;
-  box-shadow: 0 6px 14px rgba(75, 108, 215, 0.4);
+  border-color: #5867f2;
+  box-shadow: 0 4px 14px rgba(127,140,255,0.19);
 }
 
-/* Buttons common style */
 button {
-  padding: 10px 22px;
-  font-weight: 700;
-  font-size: 1rem;
-  border-radius: 30px;
+  padding: 12px 28px;
+  font-weight: 800;
+  font-size: 1.01rem;
+  border-radius: 34px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 6px 12px rgba(66, 133, 244, 0.3);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  color: white;
+  background: linear-gradient(122deg, #5165ea 20%, #2940bb 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(86, 112, 255, 0.19);
+  transition: background 0.2s, box-shadow 0.18s, transform 0.13s;
+  outline: none;
   user-select: none;
-  flex-shrink: 0;
+  will-change: background, transform;
 }
-
-/* Summarize button */
-#ai-group,
-#summarize {
-  background: linear-gradient(135deg, #5c6bc0, #3f51b5);
+#summarize, #ai-group {
+  background: linear-gradient(122deg, #47b9ff 10%, #5165ea 85%);
 }
-
-#ai-group:hover,
-#ai-group:focus,
-#summarize:hover,
-#summarize:focus {
-  background: linear-gradient(135deg, #3f51b5, #2c387e);
-  box-shadow: 0 8px 20px rgba(63, 81, 181, 0.6);
-  outline: none;
+#summarize:active, #ai-group:active {
+  transform: scale(0.96);
 }
-
-/* Copy button */
 #copy-btn {
-  background: linear-gradient(135deg, #43a047, #2e7d32);
+  background: linear-gradient(122deg, #6fdc87, #25ad60 85%);
+  box-shadow: 0 4px 16px rgba(76, 192, 132, 0.16);
+}
+#copy-btn:active {
+  transform: scale(0.96);
+}
+button:focus,
+button:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 8px 30px rgba(44, 77, 243, 0.26);
 }
 
-#copy-btn:hover,
-#copy-btn:focus {
-  background: linear-gradient(135deg, #2e7d32, #1b4d20);
-  box-shadow: 0 8px 20px rgba(46, 125, 50, 0.6);
-  outline: none;
+/* AI grouping icon button */
+.inline-icon {
+  font-size: 1.2em;
+  vertical-align: middle;
+  margin-right: 3.5px;
+  margin-left: -4px;
 }
 
 /* Result area */
 #result {
-  margin-top: 10px;
-  padding: 20px;
-  background: white;
-  border-radius: 18px;
-  border: 2px solid #7f8cff;
-  box-shadow: inset 0 4px 6px rgba(127, 140, 255, 0.15);
-  min-height: 160px;
-  max-height: 420px;
+  margin-top: 13px;
+  padding: 23px 18px;
+  background: rgba(255,255,255,0.88);
+  border-radius: 16px;
+  border: 2px solid #bfd1ff;
+  box-shadow: 0 2.5px 10px rgba(127,140,255,0.10) inset;
+  min-height: 136px;
+  max-height: 320px;
   overflow-y: auto;
   white-space: pre-wrap;
-  line-height: 1.6;
-  font-size: 1rem;
-  color: #34495e;
+  line-height: 1.7;
+  font-size: 1.08rem;
+  color: #36405e;
 }
 
 /* Bulleted lists in result */
 #result ul {
   padding-left: 24px;
-  color: #2c3e50;
+  color: #283048;
 }
-
 #result li {
-  margin-bottom: 10px;
+  margin-bottom: 7px;
 }
 
-/* Settings link */
+/* Neumorphic settings link */
 .popup_options {
   text-align: center;
-  margin-top: auto;
+  margin-top: 16px;
 }
-
 .popup_options a {
   text-decoration: none;
-  font-weight: 600;
-  color: #3f51b5;
-  padding: 8px 20px;
-  border: 2px solid #3f51b5;
+  font-weight: 800;
+  font-size: 1.02rem;
+  color: #415be7;
+  background: rgba(255,255,255,0.6);
+  padding: 9px 30px;
   border-radius: 30px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  border: 2px solid #7ba9f5;
+  transition: color 0.2s, background 0.2s, border 0.2s;
+  box-shadow: 0 2px 9px rgba(72, 99, 219, 0.10);
   display: inline-block;
 }
-
-.popup_options a:hover,
-.popup_options a:focus {
-  background-color: #3f51b5;
+.popup_options a:focus,
+.popup_options a:hover {
+  background: linear-gradient(122deg, #5efcff 10%, #2f7afd 100%);
   color: #fff;
+  border: 2px solid #397fd7;
   outline: none;
 }
 
@@ -151,24 +172,38 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 160px;
+  height: 120px;
 }
-
 .loader {
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #5c6bc0;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #5c6bc0;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   animation: spin 1s linear infinite;
-  box-shadow: 0 0 12px #5c6bc0;
+  box-shadow: 0 0 10px #5c6bc0;
+}
+@keyframes spin {
+  0%   { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+/* Fancy pop-in animation */
+@keyframes popIn {
+  from {
+    transform: scale(0.9) translateY(32px);
+    opacity: 0.2;
+    filter: blur(2px);
   }
-  100% {
-    transform: rotate(360deg);
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    filter: blur(0);
   }
+}
+.animate-pop {
+  animation: popIn 0.72s cubic-bezier(.37,1.13,.75,1.14);
+}
+.delay-2 {
+  animation-delay: .38s;
 }
