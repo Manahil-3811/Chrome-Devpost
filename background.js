@@ -6,7 +6,6 @@ chrome.runtime.onInstalled.addListener(() => {
       chrome.tabs.create({
         url: "options.html",
       });
-        
     }
   });
 });
@@ -62,6 +61,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       });
     } catch (err) {
       console.error("Error grouping tabs:", err);
+      alert("⚠️ Skipped window: Tabs can only be moved to and from normal browser windows. Please close popup, app, or devtools windows before grouping.");
       sendResponse({ success: false, message: err.message });
     }
 
