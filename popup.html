@@ -7,36 +7,74 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;800&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div class="glass-card animate-pop">
-      <h2>AI Summary</h2>
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button class="tab-btn active" data-tab="summary">Summary</button>
+      <button class="tab-btn" data-tab="tabs">Tabs</button>
+    </div>
 
-      <div class="options">
-        <select id="summary-type" aria-label="Select summary type">
-          <option value="brief">Brief Summary</option>
-          <option value="detailed">Detailed Summary</option>
-          <option value="bullets">Bullet Points</option>
-        </select>
-        <button id="summarize">Summarize</button>
-        <button id="copy-btn">Copy</button>
-      </div>
+    <!-- Summary Tab Content -->
+    <div class="tab-content active" id="summary-tab">
+      <div class="glass-card animate-pop">
+        <h2>AI Summary</h2>
 
-      <div id="result" aria-live="polite">
-        Select a summary type and click 'Summarize' to generate a summary.
+        <div class="options">
+          <select id="summary-type" aria-label="Select summary type">
+            <option value="brief">Brief Summary</option>
+            <option value="detailed">Detailed Summary</option>
+            <option value="bullets">Bullet Points</option>
+          </select>
+          <button id="summarize">Summarize</button>
+          <button id="copy-btn">Copy</button>
+        </div>
+
+        <div id="result" aria-live="polite">
+          Select a summary type and click 'Summarize' to generate a summary.
+        </div>
       </div>
     </div>
 
-    <div class="glass-card animate-pop delay-2">
-      <h2>AI Tab Grouping</h2>
-      <div class="options">
-        <button id="ai-group">
-         Group Tabs
-        </button>
+    <!-- Tabs Tab Content -->
+    <div class="tab-content" id="tabs-tab">
+      <div class="glass-card animate-pop delay-2">
+        <h2>AI Tab Grouping</h2>
+        <div class="options">
+          <button id="ai-group">AI Group</button>
+          <button id="refresh-tabs">Refresh</button>
+          <button id="create-group">New Group</button>
+        </div>
+        
+        <!-- New Group Form (Hidden by default) -->
+        <div id="new-group-form" style="display: none;">
+          <div class="form-group">
+            <input type="text" id="group-name" placeholder="Enter group name..." />
+            <select id="group-color">
+              <option value="grey">Grey</option>
+              <option value="blue">Blue</option>
+              <option value="red">Red</option>
+              <option value="yellow">Yellow</option>
+              <option value="green">Green</option>
+              <option value="pink">Pink</option>
+              <option value="purple">Purple</option>
+              <option value="cyan">Cyan</option>
+              <option value="orange">Orange</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button id="save-group" class="small-btn">Create</button>
+            <button id="cancel-group" class="small-btn cancel-btn">Cancel</button>
+          </div>
+        </div>
+
+        <div id="tabs-result" aria-live="polite">
+          Loading tabs...
+        </div>
       </div>
     </div>
 
     <div class="popup_options">
       <a href="options.html" target="_blank" rel="noopener">
-       Settings
+        Settings
       </a>
     </div>
 
