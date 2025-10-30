@@ -118,9 +118,9 @@ async function loadAndDisplayTabs() {
           
           tabsHTML += `
             <div class="tab-item compact ${isActive}" data-tab-id="${tab.id}" draggable="true">
-              <img class="tab-favicon" src=${favicon}
+              <img class="tab-favicon" src="${favicon}" alt="">
               <span class="tab-title">${title}</span>
-              <span class="drag-handle"></span>
+              <span class="drag-handle">Drag</span>
             </div>`;
         });
         
@@ -475,32 +475,68 @@ document.getElementById("summarize").addEventListener("click", async () => {
       return;
     }
 
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-      chrome.tabs.sendMessage(
-        tab.id,
-        { type: "GET_ARTICLE_TEXT" },
-        async (res) => {
-          if (!res || !res.text) {
-            resultDiv.innerText =
-              "Could not extract article text from this page.";
-            return;
-          }
-
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      console.log("Current tab:", tab);
+      
+      // Try using scripting API instead of content script
+      const injectionResults = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: () => {
           try {
-            const summary = await getGeminiSummary(
-              res.text,
-              summaryType,
-              result.geminiApiKey
-            );
-            resultDiv.innerText = summary;
+            // Try article tag first
+            const article = document.querySelector("article");
+            if (article && article.innerText.trim().length > 100) {
+              return article.innerText.trim();
+            }
+
+            // Try main content areas
+            const mainContent = document.querySelector("main, .content, .article, .post-content, .entry-content, [role='main']");
+            if (mainContent && mainContent.innerText.trim().length > 100) {
+              return mainContent.innerText.trim();
+            }
+
+            // Fallback to paragraphs
+            const paragraphs = Array.from(document.querySelectorAll("p"));
+            const text = paragraphs.map((p) => p.innerText).join("\n").trim();
+            
+            if (text.length > 50) {
+              return text;
+            }
+
+            // Last resort: body text
+            return document.body.innerText.trim();
           } catch (error) {
-            resultDiv.innerText = `Error: ${
-              error.message || "Failed to generate summary."
-            }`;
+            console.error("Error extracting text:", error);
+            return "";
           }
         }
-      );
-    });
+      });
+      
+      const text = injectionResults[0]?.result || "";
+      console.log("Extracted text length:", text.length);
+      
+      if (!text || text.trim().length === 0) {
+        resultDiv.innerText = "Could not extract article text from this page.";
+        return;
+      }
+
+      try {
+        const summary = await getGeminiSummary(
+          text,
+          summaryType,
+          result.geminiApiKey
+        );
+        resultDiv.innerText = summary;
+      } catch (error) {
+        console.error("Summary error:", error);
+        resultDiv.innerText = `Error: ${error.message || "Failed to generate summary."}`;
+      }
+      
+    } catch (error) {
+      console.error("Full error:", error);
+      resultDiv.innerText = `Error: ${error.message}. Make sure you're on a valid webpage (not chrome:// or extension pages).`;
+    }
   });
 });
 
